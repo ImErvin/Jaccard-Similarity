@@ -1,6 +1,9 @@
 package ie.gmit.sw;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -127,12 +130,25 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<h3>Uploaded Document</h3>");	
 		out.print("<font color=\"0000ff\">");	
 		BufferedReader br = new BufferedReader(new InputStreamReader(part.getInputStream()));
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			//Break each line up into shingles and do something. The servlet really should act as a
-			//contoller and dispatch this task to something else... Divide and conquer...! I've been
-			//telling you all this since 2nd year...!
-			out.print(line);
+//		String line = null;
+//		ArrayList<String> wordsAL = new ArrayList<String>();
+//		while ((line = br.readLine()) != null) {
+//			//Break each line up into shingles and do something. The servlet really should act as a
+//			//contoller and dispatch this task to something else... Divide and conquer...! I've been
+//			//telling you all this since 2nd year...!
+//			
+//			String[] words = line.split(" ");
+//			for(int i = 0; i < words.length; i++){
+//				wordsAL.add(words[i]);
+//			}
+//		}
+		
+		Shingleator shingleator = new Shingleator();
+		shingleator.parseFile(br);
+		shingleator.createShingles();
+		for(int i = 0; i < shingleator.getShingles().size(); i++)
+		{
+			out.print(shingleator.getShingles().get(i) + " ");
 		}
 		out.print("</font>");	
 	}
