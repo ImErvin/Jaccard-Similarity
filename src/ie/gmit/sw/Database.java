@@ -4,7 +4,7 @@ import java.util.*;
 import com.db4o.*;
 
 public class Database {
-	private List<Document> documents = new ArrayList<Document>();
+	private ArrayList<Document> documents;
 	private static Database instance = null;
 	//private ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 	
@@ -41,7 +41,7 @@ public class Database {
 		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 		System.out.println("WO");
 		try {
-			documents = db.queryByExample(Document.class);
+			documents = new ArrayList<Document>(db.queryByExample(Document.class));
 			db.commit();
 			return documents.get(0);
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class Database {
 		System.out.println("Open DB Get All Documento");
 		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 		try {
-			documents = db.queryByExample(Document.class);
+			documents = new ArrayList<Document>(db.queryByExample(Document.class));
 			db.commit();
 			return documents;
 		} catch (Exception e) {

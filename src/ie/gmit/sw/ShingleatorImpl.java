@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ShingleatorImpl implements Shingleator{
 	private List<String> shingles = new ArrayList<String>();
-	private final int SHINGLE_SIZE = 3;
+	private final int SHINGLE_SIZE = 2;
 	
 	public ShingleatorImpl() {
 

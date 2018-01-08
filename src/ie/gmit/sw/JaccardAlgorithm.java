@@ -19,9 +19,7 @@ public class JaccardAlgorithm implements SimilarityAlgorithm{
 		unionCardinatlity = a.size() + b.size();
 		n.retainAll(b);
 		intersectionCardinality = n.size();
-		
-		System.out.println("POWER " + intersectionCardinality + " " + unionCardinatlity);
-		return (Double.valueOf(intersectionCardinality) / (Double.valueOf(unionCardinatlity) - Double.valueOf((intersectionCardinality))) * 100);
+		return Double.valueOf(intersectionCardinality) / (Double.valueOf(unionCardinatlity) - Double.valueOf((intersectionCardinality)));
 	}
 
 }

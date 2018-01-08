@@ -5,6 +5,7 @@ import java.util.*;
 
 public class ServerImpl implements Server{
 	private List<String> words = new ArrayList<String>();
+	private Documentor documentor = new DocumentorImpl();
 	private Database db = Database.getInstance();
 	private Shingleator shingleator = new ShingleatorImpl();
 	private Hasherator hasherator = new HasheratorImpl();
@@ -23,18 +24,11 @@ public class ServerImpl implements Server{
 	
 	@Override
 	public void readDocument(String title, BufferedReader br) throws IOException {
-		String line = "";
 		try{
-			while ((line = br.readLine()) != null) {
-				
-				String[] split = line.split(" ");
-				for(int i = 0; i < split.length; i++){
-					words.add(split[i]);
-				}
-			}
-		}finally{
-			br.close();
+			words = documentor.readDocument(br);
 			d.setTitle(title);
+		}catch(IOException ioe){
+			System.out.println(ioe);
 		}
 	}
 	
@@ -59,9 +53,7 @@ public class ServerImpl implements Server{
 
 	@Override
 	public double compareSim() {
-		sc.calculateAllDocs(db.getAllDocuments(), d.getHashes());
-		System.out.println(sc.calculateAvg());
-		return sc.calculateAvg();
+		return sc.calculateAllDocs(new ArrayList<Document>(db.getAllDocuments()), d.getHashes());
 	}
 
 	@Override

@@ -16,10 +16,10 @@ public class HasheratorImpl implements Hasherator {
 														  // minHash
 														  // Algorithm.
 	
-	private final int K = 303; // Number of min hashes K - can be computed but I
+	private final int K = 200; // Number of min hashes K - can be computed but I
 							   // decided to stick with a fixed 303 for all files.
 	
-	private final int SEED = 999; // The seed for random integer generation so
+	private final int SEED = 40; // The seed for random integer generation so
 								  // that each shingle gets hashed the same
 								  // way
 								  // So that if the same document were to get
