@@ -60,8 +60,12 @@ public class ProxyServer implements Server{
 
 	@Override
 	public double compareSim() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(sessionActive){
+			return realServer.compareSim();
+		}else{
+			System.out.println("Invalid Session");
+			return 0;
+		}
 	}
 
 	@Override

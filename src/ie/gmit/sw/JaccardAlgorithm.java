@@ -7,6 +7,7 @@ public class JaccardAlgorithm implements SimilarityAlgorithm{
 	
 	private Set<Integer> n = new TreeSet<Integer>();
 	private int intersectionCardinality;
+	private int unionCardinatlity;
 	
 	public JaccardAlgorithm() {
 		// TODO Auto-generated constructor stub
@@ -15,11 +16,12 @@ public class JaccardAlgorithm implements SimilarityAlgorithm{
 	@Override
 	public double compareSimilarity(Set<Integer> a, Set<Integer> b) {
 		n = a;
+		unionCardinatlity = a.size() + b.size();
 		n.retainAll(b);
 		intersectionCardinality = n.size();
-		System.out.println("Algorithm = \n " + intersectionCardinality + " \n --------------------- \n" + 
-		a.size() + " + " + b.size() + " - " + intersectionCardinality);
-		return intersectionCardinality / ((a.size() + b.size()) - intersectionCardinality);
+		
+		System.out.println("POWER " + intersectionCardinality + " " + unionCardinatlity);
+		return (Double.valueOf(intersectionCardinality) / (Double.valueOf(unionCardinatlity) - Double.valueOf((intersectionCardinality))) * 100);
 	}
 
 }

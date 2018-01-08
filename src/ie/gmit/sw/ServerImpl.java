@@ -8,6 +8,7 @@ public class ServerImpl implements Server{
 	private Database db = Database.getInstance();
 	private Shingleator shingleator = new ShingleatorImpl();
 	private Hasherator hasherator = new HasheratorImpl();
+	private SimilarityCalculator sc = new SimilarityCalculator();
 	private Document d;
 	//private Set<Integer> hashedShingles = new TreeSet<Integer>();
 	
@@ -58,8 +59,7 @@ public class ServerImpl implements Server{
 
 	@Override
 	public double compareSim() {
-		// TODO Auto-generated method stub
-		return 0;
+		return sc.calculateJaccard(d.getHashes(), db.getFirstDocument().getHashes());
 	}
 
 	@Override

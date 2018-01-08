@@ -1,6 +1,7 @@
 package ie.gmit.sw;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -104,22 +105,6 @@ public class ServiceHandler extends HttpServlet {
 		out.print("<li><b>Build JAR Archive:</b> jar -cf jaccard.war *");
 		out.print("</ol>");
 		
-		//We can also dynamically write out a form using hidden form fields. The form itself is not
-		//visible in the browser, but the JavaScript below can see it.
-		out.print("<form name=\"frmRequestDetails\" action=\"poll\">");
-		out.print("<input name=\"txtTitle\" type=\"hidden\" value=\"" + title + "\">");
-		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
-		out.print("</form>");								
-		out.print("</body>");	
-		out.print("</html>");	
-		
-		//JavaScript to periodically poll the server for updates (this is ideal for an asynchronous operation)
-		out.print("<script>");
-		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);"); //Refresh every 10 seconds
-		out.print("</script>");
-		
-		
-			
 		/* File Upload: The following few lines read the multipart/form-data from an instance of the
 		 * interface Part that is accessed by Part part = req.getPart("txtDocument"). We can read 
 		 * bytes or arrays of bytes by calling read() on the InputStream of the Part object. In this
@@ -140,19 +125,27 @@ public class ServiceHandler extends HttpServlet {
 		}
 		
 		api.processDocument(HashingMethod.MINHASH);
-//		String line = null;
-//		ArrayList<String> wordsAL = new ArrayList<String>();
-//		while ((line = br.readLine()) != null) {
-//			//Break each line up into shingles and do something. The servlet really should act as a
-//			//contoller and dispatch this task to something else... Divide and conquer...! I've been
-//			//telling you all this since 2nd year...!
-//			
-//			String[] words = line.split(" ");
-//			for(int i = 0; i < words.length; i++){
-//				wordsAL.add(words[i]);
-//			}
-//		}
+		api.addDocument();
 		out.print("</font>");	
+		
+		//String result = String.valueOf(api.compareSim());
+		String result = String.format("%.5g%n", api.compareSim());
+		System.out.println(36.0/(606.0-36.0));
+		System.out.println(result);
+		//We can also dynamically write out a form using hidden form fields. The form itself is not
+		//visible in the browser, but the JavaScript below can see it.
+		out.print("<form name=\"frmRequestDetails\" action=\"poll\">");
+		out.print("<input name=\"txtTitle\" type=\"hidden\" value=\"" + title + "\">");
+		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
+		out.print("<input name=\"result\" type=\"hidden\" value=\"" + result + "\">");
+		out.print("</form>");								
+		out.print("</body>");	
+		out.print("</html>");	
+		
+		//JavaScript to periodically poll the server for updates (this is ideal for an asynchronous operation)
+		out.print("<script>");
+		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);"); //Refresh every 10 seconds
+		out.print("</script>");
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

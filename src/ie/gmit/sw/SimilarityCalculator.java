@@ -6,8 +6,9 @@ public class SimilarityCalculator {
 	private List<Double> jaccardIndices = new ArrayList<Double>();
 	private JaccardAlgorithm ja = new JaccardAlgorithm();
 	
-	public void calculateJaccard(Set<Integer> a, Set<Integer> b){
-		addJaccardIndex(ja.compareSimilarity(a, b));
+	public double calculateJaccard(Set<Integer> a, Set<Integer> b){
+		//addJaccardIndex(ja.compareSimilarity(a, b));
+		return ja.compareSimilarity(a, b);
 	}
 	
 	public void addJaccardIndex(double ji) {
