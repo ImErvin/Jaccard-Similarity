@@ -7,8 +7,13 @@ public class SimilarityCalculator {
 	private JaccardAlgorithm ja = new JaccardAlgorithm();
 	
 	public double calculateJaccard(Set<Integer> a, Set<Integer> b){
-		//addJaccardIndex(ja.compareSimilarity(a, b));
 		return ja.compareSimilarity(a, b);
+	}
+	
+	public void calculateAllDocs(List<Document> documents, Set<Integer> a){
+		for(Document d:documents){
+			addJaccardIndex(calculateJaccard(a, d.getHashes()));
+		}
 	}
 	
 	public void addJaccardIndex(double ji) {
@@ -17,8 +22,8 @@ public class SimilarityCalculator {
 
 	public double calculateAvg() {
 		double sum = 0;
-		for (double index : jaccardIndices) {
-			sum += index;
+		for (double i : jaccardIndices) {
+			sum += i;
 		}
 		return sum / jaccardIndices.size();
 	}

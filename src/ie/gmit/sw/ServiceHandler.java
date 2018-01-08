@@ -130,8 +130,6 @@ public class ServiceHandler extends HttpServlet {
 		
 		//String result = String.valueOf(api.compareSim());
 		String result = String.format("%.5g%n", api.compareSim());
-		System.out.println(36.0/(606.0-36.0));
-		System.out.println(result);
 		//We can also dynamically write out a form using hidden form fields. The form itself is not
 		//visible in the browser, but the JavaScript below can see it.
 		out.print("<form name=\"frmRequestDetails\" action=\"poll\">");

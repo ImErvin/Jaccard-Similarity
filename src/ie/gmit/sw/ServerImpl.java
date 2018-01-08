@@ -59,7 +59,9 @@ public class ServerImpl implements Server{
 
 	@Override
 	public double compareSim() {
-		return sc.calculateJaccard(d.getHashes(), db.getFirstDocument().getHashes());
+		sc.calculateAllDocs(db.getAllDocuments(), d.getHashes());
+		System.out.println(sc.calculateAvg());
+		return sc.calculateAvg();
 	}
 
 	@Override
