@@ -19,15 +19,17 @@ public class Database {
 		return instance;
 	}
 
-	public void addDocument(Document d) {
+	public boolean addDocument(Document d) {
 		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 		try {
 			db.store(d);
 			db.commit();
 		} catch (Exception e) {
 			db.rollback();
+			return false;
 		} finally {
 			db.close();
+			return true;
 		}
 	}
 
