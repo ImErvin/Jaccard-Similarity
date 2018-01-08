@@ -6,6 +6,10 @@ public class Document {
 	private String title;
 	private Set<Integer> hashes = new TreeSet<Integer>();
 	
+	public Document() {
+
+	}
+	
 	public Document(String title, Set<Integer> hashes) {
 		super();
 		this.title = title;

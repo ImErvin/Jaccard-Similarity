@@ -144,7 +144,7 @@ public class ServiceHandler extends HttpServlet {
 //		}
 		
 		Shingleator shingleator = new Shingleator();
-		shingleator.parseFile(br);
+		shingleator.parseFile(title, br);
 		shingleator.createShingles();
 		for(int i = 0; i < shingleator.getShingles().size(); i++)
 		{
