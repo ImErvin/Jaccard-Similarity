@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface Server {
-	public void authenticate();
+	public void start();
 	public void readDocument(String title, BufferedReader br) throws IOException;
 	public void processDocument(HashingMethod hashingMethod);
 	public List<String> displayDocument();

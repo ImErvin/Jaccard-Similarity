@@ -1,6 +1,7 @@
 package ie.gmit.sw;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 
 public class ProxyServer implements Server{
@@ -13,33 +14,48 @@ public class ProxyServer implements Server{
 	}
 	
 	@Override
-	public void authenticate() {
-		// TODO Auto-generated method stub
-		
+	public void start() {
+		realServer.start();
+		sessionActive = true;
 	}
 	
 	@Override
-	public void readDocument(String title, BufferedReader br) {
-		// TODO Auto-generated method stub
-		
+	public void readDocument(String title, BufferedReader br) throws IOException {
+		if(sessionActive){
+			realServer.readDocument(title, br);
+		}else{
+			System.out.println("Invalid Session");
+		}
 	}
 	
 	@Override
 	public void processDocument(HashingMethod hashingMethod) {
-		// TODO Auto-generated method stub
-		
+		if(sessionActive){
+			realServer.processDocument(hashingMethod);
+		}else{
+			System.out.println("Invalid Session");
+		}
 	}
 
 	@Override
 	public List<String> displayDocument() {
-		// TODO Auto-generated method stub
-		return null;
+		if(sessionActive){
+			System.out.println(realServer.displayDocument());
+			return realServer.displayDocument();
+		}else{
+			System.out.println("Invalid Session");
+			return null;
+		}
 	}
 
 	@Override
 	public boolean addDocument() {
-		// TODO Auto-generated method stub
-		return false;
+		if(sessionActive){
+			return realServer.addDocument();
+		}else{
+			System.out.println("Invalid Session");
+			return false;
+		}
 	}
 
 	@Override
@@ -50,7 +66,6 @@ public class ProxyServer implements Server{
 
 	@Override
 	public void finish() {
-		// TODO Auto-generated method stub
-		
+		sessionActive = false;
 	}
 }

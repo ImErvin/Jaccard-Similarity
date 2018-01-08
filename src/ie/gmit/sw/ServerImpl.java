@@ -16,7 +16,7 @@ public class ServerImpl implements Server{
 	}
 	
 	@Override
-	public void authenticate() {
+	public void start() {
 		d = new Document();
 	}
 	

@@ -19,6 +19,7 @@ public class Database {
 		return instance;
 	}
 
+	@SuppressWarnings("finally")
 	public boolean addDocument(Document d) {
 		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 		try {
@@ -33,6 +34,7 @@ public class Database {
 		}
 	}
 
+	@SuppressWarnings("finally")
 	public Document getFirstDocument() {
 		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 		System.out.println("WO");
@@ -45,7 +47,7 @@ public class Database {
 		} catch (Exception e) {
 			db.rollback();
 		} finally {
-			//db.close();
+			db.close();
 		}
 
 		return documents.get(documents.size()-1);
