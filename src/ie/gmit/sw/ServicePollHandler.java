@@ -23,28 +23,29 @@ public class ServicePollHandler extends HttpServlet {
 			counter = Integer.parseInt(req.getParameter("counter"));
 			counter++;
 		}
-
-		out.print("<html><head><title>A JEE Application for Measuring Document Similarity</title>");		
+		out.print("<html><head><title>A JEE Application for Measuring Document Similarity</title>");	
+		out.print("<link rel='stylesheet' href='includes/basic.css'>");
 		out.print("</head>");		
 		out.print("<body>");
-		out.print("<H1>Processing request for Job#: " + taskNumber + "</H1>");
-		out.print("<H3>Document Title: " + title + "</H3>");
-		out.print("<b><font color=\"ff0000\">A total of " + counter + " polls have been made for this request.</font></b> ");
-		out.print("<br> Wow the comparison is = " + result);
-		out.print("<form name=\"frmRequestDetails\">");
-		out.print("<input name=\"txtTitle\" type=\"hidden\" value=\"" + title + "\">");
-		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
-		out.print("<input name=\"counter\" type=\"hidden\" value=\"" + counter + "\">");
-		out.print("</form>");								
+		out.print("<center><H3>Document Title: " + title + "</H3>");
+		out.print("<table width='600' cellspacing='0' cellpadding='7' border='0'>");
+		out.print("<tr>");
+		out.print("<td valign='top'>");
+		
+		out.print("<fieldset>");
+		out.print("<legend><h3>Result</h3></legend>");
+		out.print("<center><h1> Wow the comparison is <b class='animated bounce infinite'>" + result + "% </b></h1></center>");
+		out.print("<center><a href='index.jsp'><input type='button' value='Compare Another Document'></a></center>");
+		out.print("</fieldset>");					
+		
+		out.print("</td>");
+		out.print("</tr>");
+		out.print("</table></center>");						
 		out.print("</body>");	
 		out.print("</html>");	
-		
-		out.print("<script>");
-		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 5000);"); //Refresh every 5 seconds
-		out.print("</script>");
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
- 	}
+	}
 }
