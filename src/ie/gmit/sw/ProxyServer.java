@@ -14,11 +14,11 @@ public class ProxyServer implements Server{
 	}
 	
 	@Override
-	public boolean start(String title, String firstLine) {
+	public boolean authenticate(String title, String firstLine) {
 		if(title.hashCode() == 0 || firstLine == null){
 			return false;
 		}else{
-			realServer.start(title, firstLine);
+			realServer.authenticate(title, firstLine);
 			sessionActive = true;
 			return true;
 		}
@@ -76,5 +76,15 @@ public class ProxyServer implements Server{
 	@Override
 	public void finish() {
 		sessionActive = false;
+	}
+
+	@Override
+	public double process(String title, BufferedReader br, HashingMethod hashingMethod) throws IOException {
+		if(sessionActive){
+			return realServer.process(title, br, hashingMethod);
+		}else{
+			System.out.println("Invalid Session");
+			return 0;
+		}
 	}
 }

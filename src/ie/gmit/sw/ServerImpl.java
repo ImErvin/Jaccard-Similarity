@@ -3,49 +3,46 @@ package ie.gmit.sw;
 import java.io.*;
 import java.util.*;
 
-public class ServerImpl implements Server{
+public class ServerImpl implements Server {
 	private List<String> words;
 	private Documentor documentor;
 	private Database db;
 	private Shingleator shingleator;
-	private Hasherator hasherator;
+	private Hashing hashing;
 	private SimilarityCalculator sc;
 	private Document d;
-	//private Set<Integer> hashedShingles = new TreeSet<Integer>();
-	
+	// private Set<Integer> hashedShingles = new TreeSet<Integer>();
+
 	public ServerImpl() {
 		documentor = new DocumentorImpl();
 		db = Database.getInstance();
 		shingleator = new ShingleatorImpl();
-		hasherator = new HasheratorImpl();
 		sc = new SimilarityCalculator();
 	}
-	
+
 	@Override
-	public boolean start(String title, String firstLine) {
+	public boolean authenticate(String title, String firstLine) {
 		d = new Document();
 		return true;
 	}
-	
+
 	@Override
 	public void readDocument(String title, BufferedReader br) throws IOException {
-		try{
+		try {
 			words = documentor.readDocument(br);
 			d.setTitle(title);
-		}catch(IOException ioe){
+		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}
 	}
-	
+
 	@Override
 	public void processDocument(HashingMethod hashingMethod) {
-		if(hashingMethod == HashingMethod.HASHCODE){
-			d.setHashes(hasherator.hasher(shingleator.shingler(words)));
-		}else{
-			d.setHashes(hasherator.minHasher(shingleator.shingler(words)));
-		}
+		hashing = new Hashing(shingleator.shingler(words));
+		d.setHashes(
+				hashing.hash(hashingMethod == hashingMethod.MINHASH ? new MinHashHashing() : new HashCodeHashing()));
 	}
-	
+
 	@Override
 	public List<String> displayDocument() {
 		return words;
@@ -64,7 +61,15 @@ public class ServerImpl implements Server{
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
+	@Override
+	public double process(String title, BufferedReader br, HashingMethod hashingMethod) throws IOException {
+		readDocument(title, br);
+		processDocument(hashingMethod);
+		addDocument();
+		return compareSim();
+	}
+
 }

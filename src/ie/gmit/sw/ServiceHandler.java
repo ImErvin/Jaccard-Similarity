@@ -51,7 +51,7 @@ public class ServiceHandler extends HttpServlet {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(part.getInputStream()));
 		api = new ProxyServer();
-		if(!api.start(title, br.readLine())){
+		if(!api.authenticate(title, br.readLine())){
 			out.print("<center><H1 style='color:crimson'> Please set a valid title and upload a valid file! </H1>");
 			out.print("<a href='index.jsp'>Go back</a></center>");
 		}else{
@@ -66,17 +66,12 @@ public class ServiceHandler extends HttpServlet {
 			out.print("<center><H3>Document Title: " + title + "</H3>");
 			out.print("<font color=\"0000ff\">");	
 			br = new BufferedReader(new InputStreamReader(part.getInputStream()));
-			api.readDocument(title, br);
-			
+			String result = String.format("%.5g%n", api.process(title, br, (hashingMethod.hashCode() == -745445883 ? HashingMethod.MINHASH : HashingMethod.HASHCODE)));
 			for(String s:api.displayDocument()){
 				out.print(s+" ");
 			}
-			api.processDocument((hashingMethod.hashCode() == -745445883 ? HashingMethod.MINHASH : HashingMethod.HASHCODE));
-			api.addDocument();
-			
-			out.print("</center></font>");	
-			String result = String.format("%.5g%n", api.compareSim());
 			api.finish();
+			out.print("</center></font>");	
 			out.print("</fieldset>");					
 			
 			out.print("</td>");

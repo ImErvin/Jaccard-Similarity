@@ -5,44 +5,30 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class HasheratorImpl implements Hasherator {
-	// Member Variables
-
+public class MinHashHashing implements HashingStrategy {
 	// Integer TreeSets that hold the hashed value of the shingles
 	private Set<Integer> hashedShingles = new TreeSet<Integer>();
-	private Set<Integer> minHashedShingles = new TreeSet<Integer>();
 
 	private Set<Integer> hashes = new TreeSet<Integer>(); // Random hashes for
-														  // minHash
-														  // Algorithm.
-	
-	private final int K = 200; // Number of min hashes K - can be computed but I
-							   // decided to stick with a fixed 303 for all files.
-	
-	private final int SEED = 40; // The seed for random integer generation so
-								  // that each shingle gets hashed the same
-								  // way
-								  // So that if the same document were to get
-								  // hashed, it will produce the same output.
+															// minHash
+															// Algorithm.
 
-	// Default Constructor
-	public HasheratorImpl() {
+	private final int K = 200; // Number of min hashes K - can be computed but I
+								// decided to stick with a fixed 303 for all
+								// files.
+
+	private final int SEED = 40; // The seed for random integer generation so
+									// that each shingle gets hashed the same
+									// way
+									// So that if the same document were to get
+									// hashed, it will produce the same output.
+
+	public MinHashHashing() {
 		// TODO Auto-generated constructor stub
 	}
 
-	// Produce a set of hashcodes from an arraylist of strings.
 	@Override
-	public Set<Integer> hasher(List<String> shingles) {
-
-		for (String shingle : shingles) {
-			hashedShingles.add(shingle.hashCode());
-		}
-		return hashedShingles;
-	}
-
-	// Produce a fixed set of minimum hashcodes from an arraylist of strings
-	@Override
-	public Set<Integer> minHasher(List<String> shingles) {
+	public Set<Integer> hash(List<String> shingles) {
 		// Generate a sequence of random numbers
 		Random r = new Random(SEED);
 		// Generate K number of hashes to be added to the set
@@ -68,9 +54,8 @@ public class HasheratorImpl implements Hasherator {
 					min = minHash;
 			}
 			// Add the most minimum hashes to the set.
-			minHashedShingles.add(min);
+			hashedShingles.add(min);
 		}
-		return minHashedShingles;
+		return hashedShingles;
 	}
-
 }
