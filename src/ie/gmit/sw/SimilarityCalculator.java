@@ -6,10 +6,6 @@ public class SimilarityCalculator {
 	private List<Double> jaccardIndices = new ArrayList<Double>();
 	private JaccardAlgorithm ja = new JaccardAlgorithm();
 	
-//	public double calculateJaccard(Set<Integer> a, Set<Integer> b){
-//		return ja.compareSimilarity(a, b);
-//	}
-	
 	public double calculateAllDocs(List<Document> documents, Set<Integer> a){
 		System.out.println(documents.size());
 		if(documents.size() == 1){

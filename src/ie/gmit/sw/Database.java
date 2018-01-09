@@ -6,7 +6,6 @@ import com.db4o.*;
 public class Database {
 	private ArrayList<Document> documents;
 	private static Database instance = null;
-	//private ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
 	
 	private Database() {
 
@@ -36,23 +35,6 @@ public class Database {
 		}
 	}
 
-	public Document getFirstDocument() {
-		System.out.println("Open DB Get Documento");
-		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");
-		System.out.println("WO");
-		try {
-			documents = new ArrayList<Document>(db.queryByExample(Document.class));
-			db.commit();
-			return documents.get(0);
-		} catch (Exception e) {
-			db.rollback();
-			return null;
-		} finally {
-			db.close();
-			System.out.println("Closing DB Get Documento");
-		}
-	}
-	
 	public List<Document> getAllDocuments(){
 		System.out.println("Open DB Get All Documento");
 		ObjectContainer db = Db4oEmbedded.openFile("database.db4o");

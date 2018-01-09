@@ -34,8 +34,13 @@ public class ServicePollHandler extends HttpServlet {
 		
 		out.print("<fieldset>");
 		out.print("<legend><h3>Result</h3></legend>");
-		out.print("<center><h1> Wow the comparison is <b class='animated bounce infinite'>" + result + "% </b></h1></center>");
-		out.print("<center><a href='index.jsp'><input type='button' value='Compare Another Document'></a></center>");
+		String color = "red";
+		if(Double.valueOf(result) < 50.0){
+			color = "green";
+		}
+		out.print("<center><h1> The comparison is <b class='animated fadeIn' style='color:"+ color +"'>" + result + "% </b></h1></center>");
+		out.print("<center><a href='index.jsp'><input type='button' value='Compare Another Document'></a></center>"
+				+ "<br>");
 		out.print("</fieldset>");					
 		
 		out.print("</td>");

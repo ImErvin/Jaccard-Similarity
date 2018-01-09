@@ -17,56 +17,24 @@ import javax.servlet.annotation.*;
                  maxFileSize=1024*1024*10,      // 10MB. The maximum size allowed for uploaded files, in bytes
                  maxRequestSize=1024*1024*50)   // 50MB. he maximum size allowed for a multipart/form-data request, in bytes.
 public class ServiceHandler extends HttpServlet {
-	/* Declare any shared objects here. For example any of the following can be handled from 
-	 * this context by instantiating them at a servlet level:
-	 *   1) An Asynchronous Message Facade: declare the IN and OUT queues or MessageQueue
-	 *   2) An Chain of Responsibility: declare the initial handler or a full chain object
-	 *   1) A Proxy: Declare a shared proxy here and a request proxy inside doGet()
-	 */
 	private Server api;
-	private String environmentalVariable = null; //Demo purposes only. Rename this variable to something more appropriate
+	private String somethingMoreAppropriate = null;
 	private static long jobNumber = 0;
 
-
-	/* This method is only called once, when the servlet is first started (like a constructor). 
-	 * It's the Template Patten in action! Any application-wide variables should be initialised 
-	 * here. Note that if you set the xml element <load-on-startup>1</load-on-startup>, this
-	 * method will be automatically fired by Tomcat when the web server itself is started.
-	 */
 	public void init() throws ServletException {
-		ServletContext ctx = getServletContext(); //The servlet context is the application itself.
-		
-		//Reads the value from the <context-param> in web.xml. Any application scope variables 
-		//defined in the web.xml can be read in as follows:
-		environmentalVariable = ctx.getInitParameter("SOME_GLOBAL_OR_ENVIRONMENTAL_VARIABLE"); 
+		ServletContext ctx = getServletContext();
+		somethingMoreAppropriate = ctx.getInitParameter("SOME_GLOBAL_OR_ENVIRONMENTAL_VARIABLE"); 
 	}
 
-
-	/* The doGet() method handles a HTTP GET request. Please note the following very carefully:
-	 *   1) The doGet() method is executed in a separate thread. If you instantiate any objects
-	 *      inside this method and don't pass them around (ie. encapsulate them), they will be
-	 *      thread safe.
-	 *   2) Any instance variables like environmentalVariable or class fields like jobNumber will 
-	 *      are shared by threads and must be handled carefully.
-	 *   3) It is standard practice for doGet() to forward the method invocation to doPost() or
-	 *      vice-versa.
-	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//Step 1) Write out the MIME type
 		resp.setContentType("text/html"); 
-		
-		//Step 2) Get a handle on the PrintWriter to write out HTML
 		PrintWriter out = resp.getWriter(); 
-		
-		//Step 3) Get any submitted form data. These variables are local to this method and thread safe...
 		String title = req.getParameter("txtTitle");
 		String taskNumber = req.getParameter("frmTaskNumber");
+		String hashingMethod = req.getParameter("hashingMethod");
 		Part part = req.getPart("txtDocument");
-
-		
-		//Step 4) Process the input and write out the response. 
-		//The following string should be extracted as a context from web.xml 
 		out.print("<html><head><title>A JEE Application for Measuring Document Similarity</title>");		
+		out.print("<link rel='stylesheet' href='includes/basic.css'>");
 		out.print("</head>");		
 		out.print("<body>");
 		
@@ -81,49 +49,50 @@ public class ServiceHandler extends HttpServlet {
 			//Check out-queue for finished job with the given taskNumber
 		}
 		
-		//Output some headings at the top of the generated page
-		out.print("<H1>Processing request for Job#: " + taskNumber + "</H1>");
-		out.print("<H3>Document Title: " + title + "</H3>");
-		
-		/* File Upload: The following few lines read the multipart/form-data from an instance of the
-		 * interface Part that is accessed by Part part = req.getPart("txtDocument"). We can read 
-		 * bytes or arrays of bytes by calling read() on the InputStream of the Part object. In this
-		 * case, we are only interested in text files, so it's as easy to buffer the bytes as characters
-		 * to enable the servlet to read the uploaded file line-by-line. Note that the uplaod action
-		 * can be easily completed by writing the file to disk if necessary. The following lines just
-		 * read the document from memory... this might not be a good idea if the file size is large!
-		 */
-		out.print("<h3>Uploaded Document</h3>");	
-		out.print("<font color=\"0000ff\">");	
 		BufferedReader br = new BufferedReader(new InputStreamReader(part.getInputStream()));
 		api = new ProxyServer();
-		api.start();
-		api.readDocument(title, br);
-		
-		for(String s:api.displayDocument()){
-			out.print(s+" ");
+		if(!api.start(title, br.readLine())){
+			out.print("<center><H1 style='color:crimson'> Please set a valid title and upload a valid file! </H1>");
+			out.print("<a href='index.jsp'>Go back</a></center>");
+		}else{
+			out.print("<center><H1 class='animated flash infinite'>Processing request for Job#: " + taskNumber + "</H1>");
+			out.print("<h3 style='color:crimson'> The hashing algorithm you have selected will have an impact on the result - depending on how the other files are hashed </h3>");
+			out.print("<table width='600' cellspacing='0' cellpadding='7' border='0'>");
+			out.print("<tr>");
+			out.print("<td valign='top'>");
+			
+			out.print("<fieldset class='animated fadeIn'>");
+			out.print("<legend><h3>Uploaded Document</h3></legend>");
+			out.print("<center><H3>Document Title: " + title + "</H3>");
+			out.print("<font color=\"0000ff\">");	
+			br = new BufferedReader(new InputStreamReader(part.getInputStream()));
+			api.readDocument(title, br);
+			
+			for(String s:api.displayDocument()){
+				out.print(s+" ");
+			}
+			api.processDocument((hashingMethod.hashCode() == -745445883 ? HashingMethod.MINHASH : HashingMethod.HASHCODE));
+			api.addDocument();
+			
+			out.print("</center></font>");	
+			String result = String.format("%.5g%n", api.compareSim());
+			api.finish();
+			out.print("</fieldset>");					
+			
+			out.print("</td>");
+			out.print("</tr>");
+			out.print("</table></center>");	
+			out.print("<form name=\"frmRequestDetails\" action=\"poll\">");
+			out.print("<input name=\"txtTitle\" type=\"hidden\" value=\"" + title + "\">");
+			out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
+			out.print("<input name=\"result\" type=\"hidden\" value=\"" + result + "\">");
+			out.print("</form>");								
+			out.print("</body>");	
+			out.print("</html>");	
+			out.print("<script>");
+			out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);"); //Refresh every 10 seconds
+			out.print("</script>");
 		}
-		
-		api.processDocument(HashingMethod.MINHASH);
-		api.addDocument();
-		out.print("</font>");	
-		
-		//String result = String.valueOf(api.compareSim());
-		String result = String.format("%.5g%n", api.compareSim());
-		//We can also dynamically write out a form using hidden form fields. The form itself is not
-		//visible in the browser, but the JavaScript below can see it.
-		out.print("<form name=\"frmRequestDetails\" action=\"poll\">");
-		out.print("<input name=\"txtTitle\" type=\"hidden\" value=\"" + title + "\">");
-		out.print("<input name=\"frmTaskNumber\" type=\"hidden\" value=\"" + taskNumber + "\">");
-		out.print("<input name=\"result\" type=\"hidden\" value=\"" + result + "\">");
-		out.print("</form>");								
-		out.print("</body>");	
-		out.print("</html>");	
-		
-		//JavaScript to periodically poll the server for updates (this is ideal for an asynchronous operation)
-		out.print("<script>");
-		out.print("var wait=setTimeout(\"document.frmRequestDetails.submit();\", 10000);"); //Refresh every 10 seconds
-		out.print("</script>");
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

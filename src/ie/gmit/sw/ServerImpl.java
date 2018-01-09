@@ -4,22 +4,27 @@ import java.io.*;
 import java.util.*;
 
 public class ServerImpl implements Server{
-	private List<String> words = new ArrayList<String>();
-	private Documentor documentor = new DocumentorImpl();
-	private Database db = Database.getInstance();
-	private Shingleator shingleator = new ShingleatorImpl();
-	private Hasherator hasherator = new HasheratorImpl();
-	private SimilarityCalculator sc = new SimilarityCalculator();
+	private List<String> words;
+	private Documentor documentor;
+	private Database db;
+	private Shingleator shingleator;
+	private Hasherator hasherator;
+	private SimilarityCalculator sc;
 	private Document d;
 	//private Set<Integer> hashedShingles = new TreeSet<Integer>();
 	
 	public ServerImpl() {
-		// TODO Auto-generated constructor stub
+		documentor = new DocumentorImpl();
+		db = Database.getInstance();
+		shingleator = new ShingleatorImpl();
+		hasherator = new HasheratorImpl();
+		sc = new SimilarityCalculator();
 	}
 	
 	@Override
-	public void start() {
+	public boolean start(String title, String firstLine) {
 		d = new Document();
+		return true;
 	}
 	
 	@Override

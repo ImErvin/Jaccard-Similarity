@@ -14,9 +14,14 @@ public class ProxyServer implements Server{
 	}
 	
 	@Override
-	public void start() {
-		realServer.start();
-		sessionActive = true;
+	public boolean start(String title, String firstLine) {
+		if(title.hashCode() == 0 || firstLine == null){
+			return false;
+		}else{
+			realServer.start(title, firstLine);
+			sessionActive = true;
+			return true;
+		}
 	}
 	
 	@Override

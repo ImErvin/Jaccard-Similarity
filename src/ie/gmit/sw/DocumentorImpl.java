@@ -9,7 +9,7 @@ public class DocumentorImpl implements Documentor{
 	private List<String> words = new ArrayList<String>();
 	
 	public DocumentorImpl() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	@Override
