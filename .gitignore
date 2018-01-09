@@ -1,6 +1,5 @@
 # Settings
-.settings/
-.src/
+settings/
 
 # Compiled class file 
 *.class  
