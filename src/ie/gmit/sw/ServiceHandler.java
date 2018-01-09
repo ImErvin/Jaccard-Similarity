@@ -35,7 +35,7 @@ public class ServiceHandler extends HttpServlet {
 		String hashingMethod = req.getParameter("hashingMethod");
 		Part part = req.getPart("txtDocument");
 		out.print("<html><head><title>A JEE Application for Measuring Document Similarity</title>");		
-		out.print("<link rel='stylesheet' href='includes/basic.css'>");
+		out.print("<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css'>");
 		out.print("</head>");		
 		out.print("<body>");
 		
