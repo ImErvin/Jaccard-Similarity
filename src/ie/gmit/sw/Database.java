@@ -30,10 +30,12 @@ public class Database {
 	 * @return the instance of Database to be used by other classes.
 	 */
 	public static Database getInstance() {
+		// Singleton behavior if there is no instance - create on and only one
 		if (instance == null) {
 			instance = new Database();
 			System.out.println("Created an instance");
 		}
+		// return the single instance
 		return instance;
 	}
 

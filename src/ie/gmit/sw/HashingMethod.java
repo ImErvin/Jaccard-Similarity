@@ -1,6 +1,8 @@
 package ie.gmit.sw;
 
-// Enum for the two different hashing methods that the user can use.
+/**
+ * Enum to specify which hashingMethod to use.
+ */
 public enum HashingMethod {
 	HASHCODE,
 	MINHASH
